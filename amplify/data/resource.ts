@@ -1,11 +1,17 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 /*== CHAT APPLICATION =====================================================
-This schema is currently empty as we don't need database models for the
-basic chat interface. The invoke_agent method will be implemented later.
+This schema contains a placeholder model to satisfy TypeScript.
+The actual agent functionality will be implemented later.
 =========================================================================*/
 const schema = a.schema({
-  // Schema will be expanded when needed for chat history
+  // Placeholder model - not used by the chat interface
+  // This exists only to satisfy TypeScript type requirements
+  ChatPlaceholder: a
+    .model({
+      placeholder: a.string(),
+    })
+    .authorization((allow) => [allow.publicApiKey()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
