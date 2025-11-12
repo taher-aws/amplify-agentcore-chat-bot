@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import Todos from './components/Todos.vue'
+import Chat from './components/Chat.vue'
 </script>
 
 <template>
   <main>
-    <Todos />
+    <Chat />
   </main>
 </template>
-
