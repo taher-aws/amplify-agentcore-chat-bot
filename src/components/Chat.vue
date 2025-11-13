@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import '@/assets/main.css';
 import { ref, onMounted } from 'vue';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 // Store chat messages
 interface Message {
@@ -27,10 +28,19 @@ onMounted(() => {
 // Invoke agent via Lambda API
 async function invokeAgent(message: string): Promise<string> {
   try {
+    // Get the auth session and token
+    const session = await fetchAuthSession();
+    const idToken = session.tokens?.idToken?.toString();
+    
+    if (!idToken) {
+      throw new Error('No authentication token available. Please sign in again.');
+    }
+
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`,
       },
       body: JSON.stringify({
         prompt: message,
