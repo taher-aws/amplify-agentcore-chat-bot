@@ -189,16 +189,20 @@ function handleKeyPress(event: KeyboardEvent) {
   flex-direction: column;
   flex: 1;
   color: #ffffff;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 2rem 1.5rem;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   scroll-behavior: smooth;
+  min-height: 0;
 }
 
 .messages-container::-webkit-scrollbar {
@@ -413,8 +417,7 @@ function handleKeyPress(event: KeyboardEvent) {
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(79, 70, 229, 0.3);
   padding: 1.5rem;
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
 }
 
 .input-wrapper {

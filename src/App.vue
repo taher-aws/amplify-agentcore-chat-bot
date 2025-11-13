@@ -83,8 +83,9 @@ import Chat from './components/Chat.vue';
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  height: 100vh;
+  overflow: hidden;
+  background: #0a0a0a;
 }
 
 .app-header {
