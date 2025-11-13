@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import '@/assets/main.css';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 // Store chat messages
 interface Message {
@@ -13,12 +13,41 @@ interface Message {
 const messages = ref<Message[]>([]);
 const inputMessage = ref('');
 const isLoading = ref(false);
+const sessionId = ref<string>('');
 
-// Dummy invoke_agent method - will be implemented later
+// Lambda API configuration
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+
+// Initialize session ID on mount
+onMounted(() => {
+  sessionId.value = crypto.randomUUID();
+  console.log('Session ID:', sessionId.value);
+});
+
+// Invoke agent via Lambda API
 async function invokeAgent(message: string): Promise<string> {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return "Hi from agent";
+  try {
+    const response = await fetch(API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: message,
+        sessionId: sessionId.value,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.response;
+  } catch (error) {
+    console.error('Error calling agent API:', error);
+    throw error;
+  }
 }
 
 async function sendMessage() {
@@ -51,6 +80,14 @@ async function sendMessage() {
     messages.value.push(agentMessage);
   } catch (error) {
     console.error('Error invoking agent:', error);
+    
+    const errorMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: `Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`,
+      sender: 'agent',
+      timestamp: new Date()
+    };
+    messages.value.push(errorMessage);
   } finally {
     isLoading.value = false;
   }
